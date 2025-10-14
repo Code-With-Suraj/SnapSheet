@@ -1,0 +1,5 @@
+{
+  "name": "SnapSheet",
+  "description": "An application that converts photos of tables into editable Excel (CSV) files using the Gemini API. Upload an image, and SnapSheet will intelligently extract the tabular data for you to download.",
+  "requestFramePermissions": []
+}
