@@ -2,8 +2,10 @@
 export type TableRow = string[];
 export type TableData = TableRow[];
 
-export interface ImageData {
+export interface FileData {
   base64: string;
   mimeType: string;
-  dataUrl: string;
+  previewUrl: string | null;
+  name: string;
+  type: 'image' | 'pdf';
 }

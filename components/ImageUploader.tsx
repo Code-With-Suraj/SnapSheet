@@ -1,9 +1,9 @@
 
 import React, { useCallback, useState, useRef } from 'react';
-import type { ImageData } from '../types';
+import type { FileData } from '../types';
 
 interface ImageUploaderProps {
-  onImageUpload: (imageData: ImageData) => void;
+  onImageUpload: (fileData: FileData) => void;
   isProcessing: boolean;
 }
 
@@ -32,17 +32,37 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, isP
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = useCallback(async (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+    if (!file) return;
+
+    const isImage = file.type.startsWith('image/');
+    const isPdf = file.type === 'application/pdf';
+
+    if (isImage || isPdf) {
         const base64 = await fileToBase64(file);
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-             onImageUpload({
+        
+        if (isImage) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                 onImageUpload({
+                    base64,
+                    mimeType: file.type,
+                    previewUrl: reader.result as string,
+                    name: file.name,
+                    type: 'image',
+                });
+            };
+        } else { // isPdf
+            onImageUpload({
                 base64,
                 mimeType: file.type,
-                dataUrl: reader.result as string,
+                previewUrl: null,
+                name: file.name,
+                type: 'pdf',
             });
-        };
+        }
+    } else {
+        console.warn('Unsupported file type:', file.type);
     }
   }, [onImageUpload]);
 
@@ -87,7 +107,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, isP
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,application/pdf"
         className="hidden"
         onChange={handleChange}
         disabled={isProcessing}
@@ -100,7 +120,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, isP
             </button>
              {' '}or drag and drop
         </p>
-        <p className="text-sm text-slate-500">PNG, JPG, or WEBP</p>
+        <p className="text-sm text-slate-500">PNG, JPG, WEBP, or PDF</p>
       </div>
     </div>
   );

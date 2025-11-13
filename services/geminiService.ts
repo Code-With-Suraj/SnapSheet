@@ -8,8 +8,8 @@ if (!process.env.API_KEY) {
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-const PROMPT = `You are an expert data entry specialist. Your task is to accurately extract tabular data from an image.
-- Analyze the provided image to identify the main table.
+const PROMPT = `You are an expert data entry specialist. Your task is to accurately extract tabular data from a file.
+- Analyze the provided file to identify the main table.
 - Extract all data from the table, including the complete header row.
 - Represent the extracted data as a JSON array of arrays. Each inner array must represent a single row from the table.
 - Each element within a row's array must be a string representing the content of a single cell.
@@ -17,16 +17,16 @@ const PROMPT = `You are an expert data entry specialist. Your task is to accurat
 - If a cell spans multiple rows or columns (merged cells), repeat its value for each corresponding cell in the output grid to ensure a consistent rectangular structure.
 - If a cell appears empty, represent it as an empty string "".
 - Return ONLY the JSON data. Do not include any introductory text, markdown formatting (like \`\`\`json), or explanations.
-- If you cannot find any table in the image, return an empty JSON array: [].`;
+- If you cannot find any table in the file, return an empty JSON array: [].`;
 
-export const processImageToTable = async (
-    base64Image: string,
+export const processFileToTable = async (
+    base64Data: string,
     mimeType: string
 ): Promise<TableData> => {
     try {
-        const imagePart = {
+        const filePart = {
             inlineData: {
-                data: base64Image,
+                data: base64Data,
                 mimeType: mimeType,
             },
         };
@@ -36,7 +36,7 @@ export const processImageToTable = async (
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: { parts: [imagePart, textPart] },
+            contents: { parts: [filePart, textPart] },
             config: {
                 responseMimeType: "application/json",
                 responseSchema: {
@@ -56,7 +56,7 @@ export const processImageToTable = async (
         return parsedData;
 
     } catch (error) {
-        console.error("Error processing image with Gemini API:", error);
-        throw new Error("Failed to extract table data from the image.");
+        console.error("Error processing file with Gemini API:", error);
+        throw new Error("Failed to extract table data from the file.");
     }
 };

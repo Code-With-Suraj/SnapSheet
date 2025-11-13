@@ -1,4 +1,4 @@
-// Fix: Import React to resolve 'Cannot find namespace JSX' error.
+// Fix: Import React to resolve the 'Cannot find namespace JSX' error.
 import React from 'react';
 
 const Feature: React.FC<{ icon: JSX.Element; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
@@ -36,14 +36,14 @@ export const WelcomeMessage: React.FC = () => {
         <div className="mt-8">
             <h2 className="text-2xl font-bold text-center text-slate-800 mb-2">How It Works</h2>
             <p className="text-center text-slate-600 mb-8 max-w-2xl mx-auto">
-                Transform pictures of spreadsheets, reports, or any tabular data into an editable format in three simple steps.
+                Transform documents, reports, or any tabular data into an editable format in three simple steps.
             </p>
             <div className="grid md:grid-cols-3 gap-8">
-                <Feature icon={<UploadIcon />} title="1. Upload Image">
-                    Select or drag-and-drop a clear photo of the table you want to convert.
+                <Feature icon={<UploadIcon />} title="1. Upload File">
+                    Select or drag-and-drop an image or PDF of the table you want to convert.
                 </Feature>
                 <Feature icon={<MagicIcon />} title="2. AI Extraction">
-                    Our powerful AI analyzes the image, recognizes the table structure, and extracts the data.
+                    Our powerful AI analyzes the file, recognizes the table structure, and extracts the data.
                 </Feature>
                 <Feature icon={<DownloadIcon />} title="3. Download CSV">
                     Review the extracted data and download it as a CSV file, ready to use in Excel, Google Sheets, or any spreadsheet software.
